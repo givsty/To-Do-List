@@ -1,7 +1,7 @@
 
 function App() {
   return (
-    <div>Work!</div>
+    <div>Work</div>
   )
 }
 

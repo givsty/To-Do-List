@@ -1,8 +1,8 @@
+import { MainPage } from './pages/main/ui/MainPage';
 
 function App() {
-  return (
-    <div>Work!</div>
-  )
+  console.log('App is rendering...');
+  return <MainPage />;
 }
 
-export default App
+export default App;

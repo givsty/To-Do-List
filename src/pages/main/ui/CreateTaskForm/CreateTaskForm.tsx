@@ -1,7 +1,14 @@
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { TitleInput } from '../../../../shared/ui';
+import { AddButton } from '../../../../shared/ui/AddButton';
+import {
+  StyledDescriptionInput,
+  StyledDescriptionLabel,
+  StyledPriorityLabel,
+} from './styles';
+import { TaskPriorityChip } from '../../../../shared/ui/TaskPriorityChip/TaskPriorityChip';
 
 type FormValues = {
   title: string;
@@ -30,7 +37,7 @@ export const CreateTaskForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: joiResolver(validationSchema),
     defaultValues: {
@@ -40,8 +47,8 @@ export const CreateTaskForm = () => {
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log('Form Data: ', data);
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    console.log(data);
   };
 
   return (
@@ -52,34 +59,39 @@ export const CreateTaskForm = () => {
         register={register('title')}
         error={errors.title?.message}
       />
+      <AddButton disabled={isSubmitting} />
       <div>
-        <label>Priority</label>
+        <StyledPriorityLabel>Priority:</StyledPriorityLabel>
         <div>
-          <label>
-            <input type="radio" value="low" {...register('priority')} />
-            Low
-          </label>
-          <label>
-            <input type="radio" value="medium" {...register('priority')} />
-            Medium
-          </label>
-          <label>
-            <input type="radio" value="high" {...register('priority')} />
-            High
-          </label>
+          <TaskPriorityChip
+            variant="radio"
+            value="low"
+            register={register('priority')}
+          />
+          <TaskPriorityChip
+            variant="radio"
+            value="medium"
+            register={register('priority')}
+          />
+          <TaskPriorityChip
+            variant="radio"
+            value="high"
+            register={register('priority')}
+          />
         </div>
         {errors.priority && <p>{errors.priority.message}</p>}
       </div>
       <div>
-        <label htmlFor="description">Description</label>
-        <input
+        <StyledDescriptionLabel htmlFor="description">
+          Description
+        </StyledDescriptionLabel>
+        <StyledDescriptionInput
           placeholder="Enter description here..."
           id="description"
           {...register('description')}
         />
         {errors.description && <p>{errors.description.message}</p>}
       </div>
-      <button type="submit">Submit</button>
     </form>
   );
 };

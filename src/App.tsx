@@ -1,8 +1,7 @@
+import { MainPage } from './pages/main/ui/MainPage';
 
 function App() {
-  return (
-    <div>Work</div>
-  )
+  return <MainPage />;
 }
 
-export default App
+export default App;

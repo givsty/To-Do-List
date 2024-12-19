@@ -9,12 +9,8 @@ import {
   StyledPriorityLabel,
 } from './styles';
 import { TaskPriorityChip } from '../../../../shared/ui/TaskPriorityChip/TaskPriorityChip';
-
-type FormValues = {
-  title: string;
-  priority: 'low' | 'medium' | 'high';
-  description: string;
-};
+import { taskStore } from '../../../../shared/store';
+import { Task } from '../../../../entities/task';
 
 const validationSchema = Joi.object({
   title: Joi.string().min(3).max(40).required().messages({
@@ -31,6 +27,7 @@ const validationSchema = Joi.object({
     'string.min': 'Description must be at least 3 characters',
     'string.max': 'Description must not exceed 300 characters',
   }),
+  status: Joi.boolean(),
 });
 
 export const CreateTaskForm = () => {
@@ -38,21 +35,26 @@ export const CreateTaskForm = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
+    reset,
+  } = useForm<Task>({
     resolver: joiResolver(validationSchema),
     defaultValues: {
       title: '',
       priority: 'low',
       description: '',
+      status: false,
     },
   });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<Task> = (data) => {
+    taskStore.addTask(data);
+    reset();
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <TitleInput
         placeholder="Enter title here..."
         id="title"

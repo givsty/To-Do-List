@@ -6,6 +6,7 @@ export interface IIndexedDBService {
   getAllCards(): Promise<Task[]>;
   updateTask(task: Task): Promise<void>;
   deleteTask(id: number): Promise<void>;
+  filterTasks<T extends keyof Task>(key: T, value: Task[T]): Promise<Task[]>;
 }
 
 class IndexedDBService {
@@ -84,7 +85,31 @@ class IndexedDBService {
       request.onerror = () => reject(request.error);
     });
   }
-}
 
+  async filterTasks<T extends keyof Task>(key: T, value: Task[T]): Promise<Task[]> {
+    const db = await this.openDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, 'readonly');
+      const store = transaction.objectStore(this.storeName);
+      const request = store.openCursor();
+
+      const filteredTasks: Task[] = [];
+      request.onsuccess = () => {
+        const cursor = request.result;
+        if (cursor) {
+          const task = cursor.value as Task;
+          if (task[key] === value) {
+            filteredTasks.push(task);
+          }
+          cursor.continue();
+        } else {
+          resolve(filteredTasks);
+        }
+      };
+
+      request.onerror = () => reject(request.error);
+    });
+  }
+}
 
 export { IndexedDBService };

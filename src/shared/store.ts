@@ -4,6 +4,7 @@ import { Task } from '../entities/task';
 
 class TaskStore {
   tasks: Task[] = [];
+  activeFilter: { key: keyof Task; value: Task[keyof Task] | null } = { key: 'priority', value: null }; // Активный фильтр
   dbService: IIndexedDBService;
 
   constructor(dbService: IIndexedDBService) {
@@ -27,9 +28,18 @@ class TaskStore {
   }
 
   async deleteTask(id: number) {
-    console.log('delete');
     await this.dbService.deleteTask(id);
     this.tasks = this.tasks.filter((task) => task.id !== id);
+  }
+
+  async filterTasks<T extends keyof Task>(key: T, value: Task[T]) {
+    this.activeFilter = { key, value }; // Сохраняем активный фильтр
+    this.tasks = await this.dbService.filterTasks(key, value);
+  }
+
+  clearFilter() {
+    this.activeFilter = { key: 'priority', value: null }; // Сбрасываем фильтр
+    this.loadTasks(); // Загружаем все задачи
   }
 }
 

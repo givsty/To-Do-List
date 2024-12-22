@@ -6,6 +6,8 @@ type TaskPriorityChipProps = {
   variant: 'radio' | 'chip';
   value: 'low' | 'medium' | 'high';
   register?: UseFormRegisterReturn;
+  onChange?: () => void;
+  isActive?: boolean;
 };
 
 const priorityStyles = {
@@ -18,14 +20,22 @@ export const TaskPriorityChip: React.FC<TaskPriorityChipProps> = ({
   variant,
   value,
   register,
+  onChange,
+  isActive,
 }) => {
   const { color, text } = priorityStyles[value];
 
   return (
     <>
       {variant === 'radio' ? (
-        <RadioLabel color={color}>
-          <input type="radio" value={value} {...register} />
+        <RadioLabel color={color} isActive={isActive ? true : false}>
+          <input
+            type="radio"
+            value={value}
+            {...register}
+            onChange={onChange}
+            checked={isActive}
+          />
           {text}
         </RadioLabel>
       ) : (

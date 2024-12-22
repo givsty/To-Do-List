@@ -33,7 +33,7 @@ export const StyledDescriptionInput = styled('input')({
   borderRadius: '20px',
   padding: '10px 15px',
   fontSize: '16px',
-  color: '#ffffff',
+  color: 'black',
   border: '2px solid #69A0F3',
   outline: 'none',
   width: '100%',
@@ -63,4 +63,9 @@ export const TaskListContainer = styled('div')({
   padding: '20px',
   width: '100%',
   boxSizing: 'border-box',
+});
+
+export const ErrorAlert = styled('p')({
+  color: 'red',
+  fontSize: '12px',
 });

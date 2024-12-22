@@ -4,17 +4,14 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { TitleInput } from '../../../../shared/ui';
 import { AddButton } from '../../../../shared/ui/AddButton';
 import {
+  ErrorAlert,
   StyledDescriptionInput,
   StyledDescriptionLabel,
   StyledPriorityLabel,
 } from './styles';
 import { TaskPriorityChip } from '../../../../shared/ui/TaskPriorityChip/TaskPriorityChip';
-
-type FormValues = {
-  title: string;
-  priority: 'low' | 'medium' | 'high';
-  description: string;
-};
+import { taskStore } from '../../../../shared/store';
+import { Task } from '../../../../entities/task';
 
 const validationSchema = Joi.object({
   title: Joi.string().min(3).max(40).required().messages({
@@ -31,6 +28,7 @@ const validationSchema = Joi.object({
     'string.min': 'Description must be at least 3 characters',
     'string.max': 'Description must not exceed 300 characters',
   }),
+  status: Joi.boolean(),
 });
 
 export const CreateTaskForm = () => {
@@ -38,17 +36,24 @@ export const CreateTaskForm = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
+    reset,
+    watch,
+    setValue,
+  } = useForm<Task>({
     resolver: joiResolver(validationSchema),
     defaultValues: {
       title: '',
       priority: 'low',
       description: '',
+      status: false,
     },
   });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+  const activePriority = watch('priority');
+
+  const onSubmit: SubmitHandler<Task> = (data) => {
+    taskStore.addTask(data);
+    reset();
   };
 
   return (
@@ -67,19 +72,25 @@ export const CreateTaskForm = () => {
             variant="radio"
             value="low"
             register={register('priority')}
+            isActive={activePriority === 'low'}
+            onChange={() => setValue('priority', 'low')}
           />
           <TaskPriorityChip
             variant="radio"
             value="medium"
             register={register('priority')}
+            isActive={activePriority === 'medium'}
+            onChange={() => setValue('priority', 'medium')}
           />
           <TaskPriorityChip
             variant="radio"
             value="high"
             register={register('priority')}
+            isActive={activePriority === 'high'}
+            onChange={() => setValue('priority', 'high')}
           />
         </div>
-        {errors.priority && <p>{errors.priority.message}</p>}
+        {errors.priority && <ErrorAlert>{errors.priority.message}</ErrorAlert>}
       </div>
       <div>
         <StyledDescriptionLabel htmlFor="description">
@@ -90,7 +101,9 @@ export const CreateTaskForm = () => {
           id="description"
           {...register('description')}
         />
-        {errors.description && <p>{errors.description.message}</p>}
+        {errors.description && (
+          <ErrorAlert>{errors.description.message}</ErrorAlert>
+        )}
       </div>
     </form>
   );

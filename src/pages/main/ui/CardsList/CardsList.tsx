@@ -1,49 +1,27 @@
+import { observer } from 'mobx-react';
 import { TaskCard } from '../../../../shared/ui/TaskCard/TaskCard';
 import { TaskListContainer } from './styles';
+import { taskStore } from '../../../../shared/store';
 
-export const CardList = () => {
-  const taskCardsArray: Array<TaskCard> = [
-    {
-      id: 1,
-      title: 'Помыть посуду',
-      description: 'А то мама оторвет башку',
-      priority: 'high',
-      status: false,
-    },
-    {
-      id: 2,
-      title: 'Заказать альтушку на госууслугах',
-      description: 'Я уже взрослый скуф и в чате WOT мужики сказали что пора',
-      priority: 'medium',
-      status: false,
-    },
-    {
-      id: 3,
-      title: 'Выпить сиську пива',
-      description: 'Ведь в пиве много полезных электролитов',
-      priority: 'low',
-      status: true,
-    },
-  ];
+export const CardList = observer(() => {
+  const { tasks } = taskStore;
 
   return (
     <TaskListContainer>
-      {taskCardsArray.length > 0 &&
-        taskCardsArray.map((card) => (
+      {tasks.length > 0 &&
+        tasks.map((card) => (
           <TaskCard
             key={card.id}
             title={card.title}
             description={card.description}
             priority={card.priority}
             status={card.status}
-            onDelete={() => {
-              console.log(`Task with id ${card.id} deleted`);
-            }}
-            onStatusChange={(newStatus) => {
-              console.log(`${newStatus}`);
-            }}
+            onDelete={() => taskStore.deleteTask(card.id)}
+            onStatusChange={(newStatus) =>
+              taskStore.updateTask({ ...card, status: newStatus })
+            }
           />
         ))}
     </TaskListContainer>
   );
-};
+});

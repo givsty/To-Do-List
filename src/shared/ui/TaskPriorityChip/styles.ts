@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 
-export const RadioLabel = styled('label')<{ color: string }>(({ color }) => ({
+export const RadioLabel = styled('label')<{
+  color: string;
+  isActive?: boolean;
+}>(({ color, isActive }) => ({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -16,6 +19,7 @@ export const RadioLabel = styled('label')<{ color: string }>(({ color }) => ({
   input: {
     display: 'none',
   },
+  border: isActive ? '3px solid #000000' : 'none',
 }));
 
 export const Chip = styled('div')<{ color: string }>(({ color }) => ({

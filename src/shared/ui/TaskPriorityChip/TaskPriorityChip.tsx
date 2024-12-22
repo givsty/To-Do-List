@@ -21,16 +21,22 @@ export const TaskPriorityChip: React.FC<TaskPriorityChipProps> = ({
   value,
   register,
   onChange,
-  isActive
+  isActive,
 }) => {
   const { color, text } = priorityStyles[value];
 
   return (
     <>
       {variant === 'radio' ? (
-        <RadioLabel color={color}>
-          <input type="radio" value={value} {...register} onChange={onChange} />
-          {isActive ? text : text + '21231'}
+        <RadioLabel color={color} isActive={isActive ? true : false}>
+          <input
+            type="radio"
+            value={value}
+            {...register}
+            onChange={onChange}
+            checked={isActive}
+          />
+          {text}
         </RadioLabel>
       ) : (
         <Chip color={color}>{text}</Chip>

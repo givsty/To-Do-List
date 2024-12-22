@@ -2,18 +2,14 @@ import { observer } from 'mobx-react-lite';
 import { TaskPriorityChip } from '../../shared/ui/TaskPriorityChip/TaskPriorityChip';
 import { taskStore } from '../../shared/store';
 import { StyledPriorityLabel } from '../../pages/main/ui/CreateTaskForm/styles';
+import { StyledButton } from './styles';
 
 export const Filter = observer(() => {
   const handleFilterChange = async (priority: 'low' | 'medium' | 'high') => {
-    if (taskStore.activeFilter.value === priority) {
-      taskStore.clearFilter();
-    } else {
-      await taskStore.filterTasks('priority', priority);
-    }
-    return true;
+    await taskStore.filterTasks('priority', priority);
   };
 
-  const handleClearFilter =  () => {
+  const handleClearFilter = () => {
     taskStore.clearFilter();
   };
 
@@ -39,7 +35,7 @@ export const Filter = observer(() => {
           onChange={() => handleFilterChange('high')}
           isActive={taskStore.activeFilter.value === 'high'}
         />
-        <button onClick={handleClearFilter}>Clear</button>
+        <StyledButton onClick={handleClearFilter}>Clear</StyledButton>
       </div>
     </div>
   );

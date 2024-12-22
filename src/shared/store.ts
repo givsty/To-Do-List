@@ -4,7 +4,10 @@ import { Task } from '../entities/task';
 
 class TaskStore {
   tasks: Task[] = [];
-  activeFilter: { key: keyof Task; value: Task[keyof Task] | null } = { key: 'priority', value: null }; // Активный фильтр
+  activeFilter: { key: keyof Task; value: Task[keyof Task] | null } = {
+    key: 'priority',
+    value: null,
+  }; // Активный фильтр
   dbService: IIndexedDBService;
 
   constructor(dbService: IIndexedDBService) {
@@ -24,7 +27,9 @@ class TaskStore {
 
   async updateTask(updatedTask: Task) {
     await this.dbService.updateTask(updatedTask);
-    this.tasks = this.tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task));
+    this.tasks = this.tasks.map((task) =>
+      task.id === updatedTask.id ? updatedTask : task
+    );
   }
 
   async deleteTask(id: number) {

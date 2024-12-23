@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { TitleInput } from '../../../../shared/ui';
 import { AddButton } from '../../../../shared/ui/AddButton';
 import {
+  ErrorAlert,
   StyledDescriptionInput,
   StyledDescriptionLabel,
   StyledPriorityLabel,
@@ -36,6 +37,8 @@ export const CreateTaskForm = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    watch,
+    setValue,
   } = useForm<Task>({
     resolver: joiResolver(validationSchema),
     defaultValues: {
@@ -46,15 +49,15 @@ export const CreateTaskForm = () => {
     },
   });
 
+  const activePriority = watch('priority');
+
   const onSubmit: SubmitHandler<Task> = (data) => {
     taskStore.addTask(data);
     reset();
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <TitleInput
         placeholder="Enter title here..."
         id="title"
@@ -69,19 +72,25 @@ export const CreateTaskForm = () => {
             variant="radio"
             value="low"
             register={register('priority')}
+            isActive={activePriority === 'low'}
+            onChange={() => setValue('priority', 'low')}
           />
           <TaskPriorityChip
             variant="radio"
             value="medium"
             register={register('priority')}
+            isActive={activePriority === 'medium'}
+            onChange={() => setValue('priority', 'medium')}
           />
           <TaskPriorityChip
             variant="radio"
             value="high"
             register={register('priority')}
+            isActive={activePriority === 'high'}
+            onChange={() => setValue('priority', 'high')}
           />
         </div>
-        {errors.priority && <p>{errors.priority.message}</p>}
+        {errors.priority && <ErrorAlert>{errors.priority.message}</ErrorAlert>}
       </div>
       <div>
         <StyledDescriptionLabel htmlFor="description">
@@ -92,7 +101,9 @@ export const CreateTaskForm = () => {
           id="description"
           {...register('description')}
         />
-        {errors.description && <p>{errors.description.message}</p>}
+        {errors.description && (
+          <ErrorAlert>{errors.description.message}</ErrorAlert>
+        )}
       </div>
     </form>
   );

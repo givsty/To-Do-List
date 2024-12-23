@@ -6,6 +6,14 @@ import { taskStore } from '../../../../shared/store';
 export const CardList = observer(() => {
   const { tasks } = taskStore;
 
+  if (tasks.length === 0) {
+    return (
+      <TaskListContainer>
+        <p>Let's add something!</p>
+      </TaskListContainer>
+    )
+  }
+
   return (
     <TaskListContainer>
       {tasks.length > 0 &&

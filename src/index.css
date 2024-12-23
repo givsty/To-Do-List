@@ -40,7 +40,6 @@ body {
   height: 100%;
   width: 100%;
   margin: 0;
-  overflow: hidden;
 }
 
 /* A elements that don't have a class get default styles */

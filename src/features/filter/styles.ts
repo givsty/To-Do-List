@@ -1,5 +1,11 @@
 import styled from '@emotion/styled';
 
+export const FilterContainer = styled('div')({
+  display: 'flex',
+  gap: '16px',
+  alignItems: 'center',
+});
+
 export const StyledButton = styled('button')({
   display: 'inline-flex',
   alignItems: 'center',
@@ -11,5 +17,4 @@ export const StyledButton = styled('button')({
   color: '#ffffff',
   textAlign: 'center',
   width: '65px',
-  height: '37px',
 });

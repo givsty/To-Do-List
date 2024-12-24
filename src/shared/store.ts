@@ -7,7 +7,7 @@ class TaskStore {
   activeFilter: { key: keyof Task; value: Task[keyof Task] | null } = {
     key: 'priority',
     value: null,
-  }; // Активный фильтр
+  };
   dbService: IIndexedDBService;
 
   constructor(dbService: IIndexedDBService) {
@@ -38,17 +38,17 @@ class TaskStore {
   }
 
   async filterTasks<T extends keyof Task>(key: T, value: Task[T]) {
-    this.activeFilter = { key, value }; // Сохраняем активный фильтр
+    this.activeFilter = { key, value };
     this.tasks = await this.dbService.filterTasks(key, value);
   }
 
   clearFilter() {
-    this.activeFilter = { key: 'priority', value: null }; // Сбрасываем фильтр
-    this.loadTasks(); // Загружаем все задачи
+    this.activeFilter = { key: 'priority', value: null };
+    this.loadTasks();
   }
 }
 
 const dbService = new IndexedDBService('TodoDB', 'tasks');
 const taskStore = new TaskStore(dbService);
 
-export { taskStore };
+export { taskStore, TaskStore };
